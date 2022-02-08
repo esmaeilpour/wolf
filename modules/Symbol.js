@@ -39,16 +39,18 @@ module.exports = class Symbol {
     }
 
     getters() {
+        const gf = (scope, field) => scope.filters.find(filter => field in filter)[field];
+
         return {
-            get minPrice() { return Number(this.filters[0].minPrice) },
-            get maxPrice() { return Number(this.filters[0].maxPrice) },
-            get tickSize() { return Number(this.filters[0].tickSize) },
-            get minQty() { return Number(this.filters[1].minQty) },
-            get maxQty() { return Number(this.filters[1].maxQty) },
-            get stepSize() { return Number(this.filters[1].stepSize) },
-            get priceSigFig() { return Number(this.filters[0].tickSize.indexOf('1') - 1) },
+            get minPrice() { return Number(gf(this, 'minPrice')) },
+            get maxPrice() { return Number(gf(this, 'maxPrice')) },
+            get tickSize() { return Number(gf(this, 'tickSize')) },
+            get minQty() { return Number(gf(this, 'minQty')) },
+            get maxQty() { return Number(gf(this, 'maxQty')) },
+            get stepSize() { return Number(gf(this, 'stepSize')) },
+            get priceSigFig() { return Number(gf(this, 'tickSize').indexOf('1') - 1) },
             get quantitySigFig() {
-                const sf = Number(this.filters[1].stepSize.indexOf('1') - 1);
+                const sf = Number(gf(this, 'stepSize').indexOf('1') - 1);
                 return sf >= 0 ? sf : 0;
             }
         }
